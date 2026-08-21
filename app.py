@@ -7,7 +7,6 @@ import wave
 from io import BytesIO
 from pathlib import Path
 
-import argostranslate.translate
 import lameenc
 from flask import Flask, jsonify, render_template, request, send_file
 
@@ -27,6 +26,8 @@ _en_to_hi_translation_loaded = False
 def get_en_hi_translation():
     global _en_to_hi_translation, _en_to_hi_translation_loaded
     if not _en_to_hi_translation_loaded:
+        import argostranslate.translate
+
         installed_languages = argostranslate.translate.get_installed_languages()
         en = next((lang for lang in installed_languages if lang.code == "en"), None)
         hi = next((lang for lang in installed_languages if lang.code == "hi"), None)
