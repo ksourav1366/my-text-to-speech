@@ -18,6 +18,7 @@ VOICES_DIR = BASE_DIR / "voices"
 
 app = Flask(__name__)
 
+TRANSLATION_ENABLED = os.environ.get("ENABLE_TRANSLATION", "1") != "0"
 
 _en_to_hi_translation = None
 _en_to_hi_translation_loaded = False
@@ -87,8 +88,16 @@ def api_voices():
     return jsonify(list_voices())
 
 
+@app.route("/api/config")
+def api_config():
+    return jsonify({"translation_enabled": TRANSLATION_ENABLED})
+
+
 @app.route("/api/translate", methods=["POST"])
 def api_translate():
+    if not TRANSLATION_ENABLED:
+        return jsonify({"error": "Auto-translation is not available on this deployment. Please type Hindi text directly."}), 503
+
     data = request.get_json(force=True)
     text = (data.get("text") or "").strip()
 

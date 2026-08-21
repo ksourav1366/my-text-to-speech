@@ -15,6 +15,7 @@ const playerEl = document.getElementById("player");
 const DEVANAGARI_RE = /[ऀ-ॿ]/;
 
 let voices = [];
+let translationEnabled = true;
 let currentAudioUrl = null;
 let lastParams = null;
 let lastTranslatedSource = null;
@@ -29,6 +30,10 @@ async function resolveSpokenText(text) {
     translationField.style.display = "none";
     lastTranslatedSource = null;
     return text;
+  }
+
+  if (!translationEnabled) {
+    throw new Error("Auto-translation isn't available on this deployment. Please type Hindi text directly, or pick an English voice.");
   }
 
   translationField.style.display = "flex";
@@ -52,6 +57,16 @@ async function resolveSpokenText(text) {
   }
 
   return translationEl.value.trim();
+}
+
+async function loadConfig() {
+  try {
+    const res = await fetch("/api/config");
+    const config = await res.json();
+    translationEnabled = config.translation_enabled !== false;
+  } catch (e) {
+    translationEnabled = true;
+  }
 }
 
 async function loadVoices() {
@@ -189,4 +204,5 @@ downloadMp3Btn.addEventListener("click", async () => {
   }
 });
 
+loadConfig();
 loadVoices();
