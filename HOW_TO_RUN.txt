@@ -1,0 +1,41 @@
+HOW TO RUN THIS APP LOCALLY
+============================
+
+QUICK START (if already set up on this machine)
+-------------------------------------------------
+1. Open a terminal in this folder:
+   c:\Users\nuvoretail\Desktop\Dashboard\Text to Speech
+
+2. Run:
+   python app.py
+
+3. Open this link in your browser:
+   http://127.0.0.1:5050
+
+4. To stop the server, go back to the terminal and press CTRL+C.
+
+
+FULL SETUP (first time on a new machine)
+-------------------------------------------------
+1. Install Python 3.10+ if not already installed.
+
+2. Open a terminal in this folder and install dependencies:
+   pip install -r requirements.txt
+
+3. Download the voice models (one-time, ~250 MB total):
+   python -m piper.download_voices --download-dir voices en_US-lessac-medium en_US-amy-medium hi_IN-priyamvada-medium hi_IN-pratham-medium
+
+4. Download the English-to-Hindi translation model (one-time):
+   python -c "import argostranslate.package; argostranslate.package.update_package_index(); pkg = next(p for p in argostranslate.package.get_available_packages() if p.from_code=='en' and p.to_code=='hi'); argostranslate.package.install_from_path(pkg.download())"
+
+5. Run the app:
+   python app.py
+
+6. Open in your browser:
+   http://127.0.0.1:5050
+
+
+NOTES
+-------------------------------------------------
+- Everything runs offline once set up — no internet or API key needed to generate speech.
+- If port 5050 is already in use, edit the last line of app.py (app.run(..., port=5050)) to a different port, e.g. 5051.

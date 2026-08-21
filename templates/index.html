@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>My Text to Speech</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <div class="app">
+    <h1>🗣️ My Text to Speech</h1>
+    <p class="subtitle">Offline neural voices, powered by Piper — runs entirely on this machine.</p>
+
+    <textarea id="text" placeholder="Type or paste text here..." rows="8"></textarea>
+
+    <div id="translation-field" class="field" style="display: none; margin-top: 1rem;">
+      <label for="translation">🌐 Auto-translated to Hindi — review or edit before generating</label>
+      <textarea id="translation" rows="4"></textarea>
+    </div>
+
+    <div class="controls">
+      <div class="field">
+        <label for="voice">Voice</label>
+        <select id="voice"></select>
+      </div>
+
+      <div class="field" id="speaker-field" style="display: none;">
+        <label for="speaker">Speaker</label>
+        <select id="speaker"></select>
+      </div>
+
+      <div class="field">
+        <label for="speed">Speed: <span id="speed-value">1.0x</span></label>
+        <input type="range" id="speed" min="0.5" max="2" step="0.1" value="1" />
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="speak-btn">▶ Generate speech</button>
+      <a id="download-wav-btn" style="display: none;" download="speech.wav">⬇ Download WAV</a>
+      <button id="download-mp3-btn" style="display: none;">⬇ Download MP3</button>
+    </div>
+
+    <p id="status"></p>
+
+    <audio id="player" controls style="display: none;"></audio>
+  </div>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

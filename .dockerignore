@@ -1,0 +1,6 @@
+voices/
+__pycache__/
+*.pyc
+.git/
+.gitignore
+HOW_TO_RUN.txt
