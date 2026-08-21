@@ -20,16 +20,19 @@ VOICES_DIR = BASE_DIR / "voices"
 app = Flask(__name__)
 
 
-def load_en_hi_translation():
-    installed_languages = argostranslate.translate.get_installed_languages()
-    en = next((lang for lang in installed_languages if lang.code == "en"), None)
-    hi = next((lang for lang in installed_languages if lang.code == "hi"), None)
-    if not en or not hi:
-        return None
-    return en.get_translation(hi)
+_en_to_hi_translation = None
+_en_to_hi_translation_loaded = False
 
 
-EN_TO_HI_TRANSLATION = load_en_hi_translation()
+def get_en_hi_translation():
+    global _en_to_hi_translation, _en_to_hi_translation_loaded
+    if not _en_to_hi_translation_loaded:
+        installed_languages = argostranslate.translate.get_installed_languages()
+        en = next((lang for lang in installed_languages if lang.code == "en"), None)
+        hi = next((lang for lang in installed_languages if lang.code == "hi"), None)
+        _en_to_hi_translation = en.get_translation(hi) if en and hi else None
+        _en_to_hi_translation_loaded = True
+    return _en_to_hi_translation
 
 
 def list_voices():
@@ -90,10 +93,12 @@ def api_translate():
 
     if not text:
         return jsonify({"error": "Text is required."}), 400
-    if EN_TO_HI_TRANSLATION is None:
+
+    translation = get_en_hi_translation()
+    if translation is None:
         return jsonify({"error": "English-to-Hindi translation model is not installed."}), 500
 
-    translated = EN_TO_HI_TRANSLATION.translate(text)
+    translated = translation.translate(text)
     return jsonify({"translated": translated})
 
 
